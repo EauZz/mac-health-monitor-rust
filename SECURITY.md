@@ -1,22 +1,22 @@
-# Security Policy
+# Politique de sécurité
 
-## Supported Versions
+## Versions supportées
 
-Only the latest `main` branch is currently supported.
+Seule la dernière version de la branche `main` est actuellement supportée.
 
-## Reporting A Vulnerability
+## Signaler une vulnérabilité
 
-Please open a private security advisory on GitHub if available, or contact the maintainer directly.
+Si possible, ouvrez une alerte de sécurité privée sur GitHub ou contactez directement le mainteneur.
 
-Do not open a public issue for vulnerabilities that expose local files, tokens, command-line arguments, or private account data.
+N’ouvrez pas d’issue publique pour une vulnérabilité qui expose des fichiers locaux, tokens, arguments de ligne de commande ou données privées.
 
-## Local Data Boundaries
+## Limites de données locales
 
-Mac Health Monitor Rust is local-first. It should not transmit system metrics, process lists, OpenUsage cache data, or LLM usage data to remote services.
+Mac Health Monitor Rust fonctionne d’abord en local. L’app ne doit pas transmettre de métriques système, listes de processus, données OpenUsage ou usage LLM vers des services distants.
 
-Security-sensitive changes should preserve these boundaries:
+Les changements sensibles côté sécurité doivent préserver ces limites :
 
-- no remote telemetry by default;
-- no transcript reading;
-- no API key/token collection;
-- no privileged helper without a separate explicit review.
+- pas de télémétrie distante par défaut ;
+- pas de lecture de transcripts ;
+- pas de collecte de clés API ou de tokens ;
+- pas de helper privilégié sans revue explicite séparée.

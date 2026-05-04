@@ -1,47 +1,47 @@
 # Mac Health Monitor Rust
 
-A lightweight native macOS dashboard for checking the health of a Mac without opening Activity Monitor.
+Un tableau de bord macOS natif, léger et local, pour comprendre rapidement la santé d’un Mac sans ouvrir le Terminal ni le Moniteur d’activité.
 
-It is built in Rust with a tiny local HTTP server and a native WKWebView window through `wry`/`tao`. The app focuses on fast startup, low overhead, and readable explanations for opaque macOS processes like `WindowServer`, `fileproviderd`, `cloudd`, `com.apple.WebKit.GPU`, Rosetta, and local LLM tooling.
+L’application est écrite en Rust. Elle démarre un petit serveur HTTP local et affiche l’interface dans une vraie fenêtre macOS via `wry` et `tao` avec WKWebView. L’objectif est simple : démarrage rapide, faible consommation, et explications lisibles pour les processus macOS opaques comme `WindowServer`, `fileproviderd`, `cloudd`, `com.apple.WebKit.GPU`, Rosetta ou les outils LLM locaux.
 
-## Features
+## Fonctionnalités
 
-- Native macOS app window, not a browser tab.
-- CPU, memory pressure, disk, battery, network, uptime, and system health cards.
-- Rolling 5-minute Process Watch for CPU, RAM, thermal impact, sleeping-heavy apps, and Rosetta suspects.
-- Human-readable process explanations for common macOS daemons and hidden app helpers.
-- Best-effort File Provider attribution for iCloud Drive, Adobe Creative Cloud, OneDrive, Dropbox, Google Drive, Box, Nextcloud, Synology Drive, and Proton Drive.
-- Local LLM activity monitor for Claude, Codex, and Gemini processes.
-- Optional OpenUsage cache reading for quota/token summaries when OpenUsage is installed locally.
-- Light, warm UI designed for quick scanning on a MacBook display.
+- Fenêtre macOS native, pas un onglet de navigateur.
+- Cartes de suivi CPU, pression mémoire, disque, batterie, réseau, uptime et santé système.
+- `Process Watch` sur moyenne glissante de 5 minutes pour CPU, RAM, impact thermique, apps lourdes en veille et suspects Rosetta.
+- Explications en langage clair pour les daemons macOS fréquents et les helpers d’apps difficiles à identifier.
+- Attribution File Provider au mieux pour iCloud Drive, Adobe Creative Cloud, OneDrive, Dropbox, Google Drive, Box, Nextcloud, Synology Drive et Proton Drive.
+- Suivi local de l’activité LLM pour Claude, Codex et Gemini.
+- Lecture optionnelle du cache OpenUsage pour afficher quotas, tokens et coûts quand OpenUsage est installé localement.
+- Interface claire, chaude et rapide à scanner sur écran de MacBook.
 
-## Privacy Model
+## Confidentialité
 
-The app runs locally on `127.0.0.1` and does not send telemetry to a remote server.
+L’application tourne localement sur `127.0.0.1` et n’envoie aucune télémétrie vers un serveur distant.
 
-It reads macOS command-line tools and local files that are already available to the current user. For LLM usage, it can read the OpenUsage cache at:
+Elle lit des commandes macOS et des fichiers locaux déjà accessibles à l’utilisateur courant. Pour l’usage LLM, elle peut lire le cache OpenUsage :
 
 ```text
 ~/Library/Application Support/com.sunstory.openusage/usage-api-cache.json
 ```
 
-It does not read Claude/Codex/Gemini conversation transcripts.
+Elle ne lit pas les conversations Claude, Codex ou Gemini.
 
-## Limitations
+## Limites
 
-- Apple Silicon does not expose precise CPU temperature in Celsius to normal sandbox-free apps. The app shows a thermal index and macOS thermal state unless privileged tools expose more.
-- Safari/WebKit does not expose reliable CPU/RAM attribution per tab through public APIs. WebKit processes are explained as Safari/webview activity, but not mapped to exact tabs.
-- Process explanations are best-effort heuristics. They are designed to be useful, not to pretend macOS exposes every private owner relationship.
-- The generated app is not notarized. If distributed as a binary, users may need to approve it in macOS Gatekeeper settings.
+- Apple Silicon n’expose pas la température CPU précise en degrés Celsius aux apps normales. L’app affiche donc un indice thermique et l’état thermique macOS, sauf si des outils privilégiés exposent plus d’informations.
+- Safari et WebKit n’exposent pas d’attribution CPU/RAM fiable par onglet via des API publiques. Les processus WebKit sont expliqués comme activité Safari/webview, mais pas reliés à un onglet exact.
+- Les explications de processus sont heuristiques. Elles sont conçues pour être utiles, pas pour faire croire que macOS expose tous les liens privés entre services et apps.
+- L’app générée n’est pas notariée. Si elle est distribuée en binaire, macOS peut demander à l’utilisateur de l’autoriser via Gatekeeper.
 
-## Requirements
+## Prérequis
 
-- macOS 13 or later.
-- Rust stable with edition 2024 support.
+- macOS 13 ou plus récent.
+- Rust stable avec support de l’édition 2024.
 - Xcode Command Line Tools.
-- `sips` and `iconutil` for app icon generation, both available on macOS.
+- `sips` et `iconutil` pour générer l’icône d’app, disponibles par défaut sur macOS.
 
-## Run From Source
+## Lancer depuis le code source
 
 ```bash
 git clone https://github.com/EauZz/mac-health-monitor-rust.git
@@ -49,22 +49,22 @@ cd mac-health-monitor-rust
 CARGO_TARGET_DIR=/tmp/mac-health-monitor-rust-target cargo run --release
 ```
 
-The internal server uses port `8767` by default and automatically falls back to a free port if needed.
+Le serveur interne utilise le port `8767` par défaut et bascule automatiquement sur un port libre si nécessaire.
 
-## Build The macOS App
+## Construire l’app macOS
 
 ```bash
 ./build-app.sh
 open "dist/Mac Health Monitor Rust.app"
 ```
 
-The build script creates:
+Le script génère :
 
 ```text
 dist/Mac Health Monitor Rust.app
 ```
 
-You can customize the output:
+La sortie peut être personnalisée :
 
 ```bash
 APP_NAME="Mac Health Monitor" \
@@ -73,7 +73,7 @@ OUT_DIR="$PWD/dist" \
 ./build-app.sh
 ```
 
-## Development Checks
+## Vérifications de développement
 
 ```bash
 cargo fmt --check
@@ -83,17 +83,17 @@ node --check public/app.js
 ./build-app.sh
 ```
 
-## Repository Layout
+## Structure du repo
 
 ```text
-src/main.rs          Rust app, local server, macOS metrics collectors
-public/             UI assets served inside the native window
-assets/             App icon source assets
-build-app.sh        Portable macOS .app bundle builder
-PRODUCT.md          Product notes
-DESIGN.md           Design direction
+src/main.rs          App Rust, serveur local et collecte des métriques macOS
+public/             Interface servie dans la fenêtre native
+assets/             Ressources de l’icône d’app
+build-app.sh        Script portable de génération du bundle .app
+PRODUCT.md          Notes produit
+DESIGN.md           Direction design
 ```
 
-## License
+## Licence
 
-MIT. See [LICENSE](LICENSE).
+MIT. Voir [LICENSE](LICENSE).

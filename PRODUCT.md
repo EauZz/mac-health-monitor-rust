@@ -1,37 +1,37 @@
-# Product
+# Produit
 
-## Register
+## Registre
 
-product
+produit
 
-## Users
+## Utilisateurs
 
-Primary user is the owner of a MacBook Air M2 who wants to understand system health without opening Terminal or Activity Monitor. The usage context is quick diagnosis during daily work: the user wants to know what is slowing, heating, or draining the machine, and whether an app can be closed safely.
+L’utilisateur principal est le propriétaire d’un MacBook Air M2 qui veut comprendre la santé de son système sans ouvrir le Terminal ni le Moniteur d’activité. Le contexte d’usage est le diagnostic rapide pendant le travail quotidien : identifier ce qui ralentit, chauffe ou vide la batterie, et savoir si une app peut être fermée sans risque.
 
-## Product Purpose
+## Objectif produit
 
-Mac Health Monitor is a lightweight native macOS dashboard for real-time local health telemetry. It surfaces CPU, memory, storage, network, battery, thermal state, Rosetta candidates, and long-window process consumption in a calm, actionable interface.
+Mac Health Monitor est un tableau de bord macOS natif et léger pour visualiser la télémétrie locale en temps réel. Il expose CPU, mémoire, stockage, réseau, batterie, état thermique, candidats Rosetta et consommation durable des processus dans une interface calme et actionnable.
 
-Success means the user can identify the current bottleneck and the top sustained offenders within seconds, without noisy raw telemetry or fake precision. The app should feel fast, native, trustworthy, and easy to leave open.
+Le succès se mesure à la capacité de l’utilisateur à identifier en quelques secondes le goulot d’étranglement et les principaux responsables sur la durée, sans bruit télémétrique ni fausse précision. L’app doit être rapide, native, fiable et agréable à garder ouverte.
 
-## Brand Personality
+## Personnalité de marque
 
-Calm, precise, premium.
+Calme, précise, premium.
 
-The product should borrow the speed and focus of Raycast, the hierarchy discipline of Linear, and the diagnostic credibility of iStat Menus, while using a warm light surface rather than a dark technical cockpit.
+Le produit doit reprendre la vitesse et le focus de Raycast, la hiérarchie visuelle de Linear et la crédibilité diagnostique d’iStat Menus, tout en utilisant une surface claire et chaude plutôt qu’un cockpit technique sombre.
 
-## Anti-references
+## Anti-références
 
-Do not imitate a fake macOS window chrome. Do not create a Windows-style dashboard clone. Do not stack dense metrics in the same visual zone. Do not use heavy animations, decorative clutter, or chart-heavy panels that make process diagnosis harder.
+Ne pas imiter une fausse barre de fenêtre macOS. Ne pas créer un clone de dashboard Windows. Ne pas empiler des métriques denses dans la même zone visuelle. Ne pas ajouter d’animations lourdes, de décoration gratuite ou de panneaux trop chargés en graphiques qui rendraient le diagnostic plus difficile.
 
-## Design Principles
+## Principes design
 
-1. Diagnose before decorating: every visual decision should help the user understand health, load, or actionability faster.
-2. Average beats jitter: sustained 5-minute process ranking should be visually calmer and more important than momentary spikes.
-3. Soft but exact: use warm, comfortable materials while keeping numbers, labels, and warning states crisp.
-4. Make the culprit obvious: if one app is slowing, heating, or consuming memory, the interface should make that app easy to spot.
-5. Stay lightweight: avoid dependencies, oversized assets, expensive effects, and interactions that would undermine the purpose of a performance monitor.
+1. Diagnostiquer avant de décorer : chaque décision visuelle doit aider l’utilisateur à comprendre plus vite la santé, la charge ou l’action possible.
+2. La moyenne vaut mieux que le bruit : le classement durable sur 5 minutes doit être visuellement plus calme et plus important que les pics instantanés.
+3. Doux mais exact : utiliser des surfaces chaudes et confortables tout en gardant chiffres, libellés et alertes très nets.
+4. Rendre le coupable évident : si une app ralentit, chauffe ou consomme trop de mémoire, l’interface doit la rendre facile à repérer.
+5. Rester léger : éviter les dépendances inutiles, ressources trop lourdes, effets coûteux et interactions qui contredisent le rôle d’un moniteur de performance.
 
-## Accessibility & Inclusion
+## Accessibilité et inclusion
 
-Target WCAG AA contrast for text and controls. Do not rely on color alone for health states. Respect reduced motion preferences. Keep controls reachable with keyboard focus states and maintain readable type at small laptop sizes.
+Viser un contraste WCAG AA pour les textes et contrôles. Ne pas dépendre uniquement de la couleur pour les états de santé. Respecter `prefers-reduced-motion`. Garder des contrôles accessibles au clavier et une typographie lisible sur petits écrans de portable.

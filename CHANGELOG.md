@@ -1,10 +1,10 @@
-# Changelog
+# Journal des changements
 
 ## 0.1.0
 
-- Initial open source release.
-- Native macOS WKWebView app shell.
-- Local metrics server on loopback.
-- CPU, memory, disk, battery, network, uptime, thermal, Rosetta, and LLM panels.
-- Rolling Process Watch with top CPU, RAM, thermal, sleepers, and process cause explanations.
-- Portable `build-app.sh` for creating a local `.app` bundle in `dist/`.
+- Première version open source.
+- Fenêtre macOS native via WKWebView.
+- Serveur local de métriques sur boucle locale.
+- Panneaux CPU, mémoire, disque, batterie, réseau, uptime, thermique, Rosetta et LLM.
+- `Process Watch` sur moyenne glissante avec top CPU, RAM, thermique, apps en veille et explications de processus.
+- Script portable `build-app.sh` pour générer un bundle `.app` local dans `dist/`.
