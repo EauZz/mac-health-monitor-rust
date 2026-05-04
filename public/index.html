@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Mac Health Monitor Rust v2</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="window">
+        <div class="content">
+          <section class="overview">
+            <div class="brand-block">
+              <span class="eyebrow">Diagnostic local</span>
+              <h1>Mac Health Monitor</h1>
+              <p id="subtitle">Surveillance locale en temps réel</p>
+            </div>
+            <div class="overview-health" aria-label="Etat global">
+              <span class="status-pill"><i></i><strong id="header-health">Système sain</strong></span>
+              <small>moyenne glissante 5 min</small>
+            </div>
+            <div class="actions">
+              <button id="refresh" class="icon-button" title="Rafraichir maintenant" type="button" aria-label="Rafraichir maintenant">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v6h-6" />
+                </svg>
+              </button>
+              <button id="pause" class="icon-button" title="Pause" type="button" aria-label="Mettre en pause">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 5v14M16 5v14" />
+                </svg>
+              </button>
+            </div>
+          </section>
+
+          <section class="hero-grid">
+            <article class="panel meter-card accent-blue">
+              <div class="panel-head">
+                <div>
+                  <span class="card-kicker">Charge instantanée</span>
+                  <h2>CPU</h2>
+                  <p id="cpu-name">Apple Silicon</p>
+                </div>
+                <span class="card-token">CPU</span>
+              </div>
+              <div class="gauge" data-value="0" id="cpu-gauge">
+                <svg viewBox="0 0 160 100">
+                  <path class="track" d="M20 82 A60 60 0 0 1 140 82" />
+                  <path class="fill" d="M20 82 A60 60 0 0 1 140 82" />
+                </svg>
+                <div class="gauge-label"><strong id="cpu-usage">0</strong><span>%</span><small>Utilisation</small></div>
+              </div>
+              <div class="stats three">
+                <div><strong id="cpu-load">0.00</strong><span>Load 1m</span></div>
+                <div><strong id="cpu-processes">0</strong><span>Processus</span></div>
+                <div><strong id="cpu-thermal">Nominal</strong><span>Thermique</span></div>
+              </div>
+              <canvas id="cpu-chart" height="120"></canvas>
+            </article>
+
+            <article class="panel meter-card accent-green">
+              <div class="panel-head">
+                <div>
+                  <span class="card-kicker">Proxy graphique</span>
+                  <h2>Apple GPU</h2>
+                  <p>M2 integrated graphics</p>
+                </div>
+                <span class="card-token">GPU</span>
+              </div>
+              <div class="gauge" data-value="0" id="gpu-gauge">
+                <svg viewBox="0 0 160 100">
+                  <path class="track" d="M20 82 A60 60 0 0 1 140 82" />
+                  <path class="fill" d="M20 82 A60 60 0 0 1 140 82" />
+                </svg>
+                <div class="gauge-label"><strong id="gpu-usage">--</strong><span>%</span><small>Proxy charge</small></div>
+              </div>
+              <div class="stats three">
+                <div><strong id="gpu-source">CPU/load</strong><span>Source</span></div>
+                <div><strong>Unified</strong><span>Mémoire</span></div>
+                <div><strong id="gpu-note">macOS</strong><span>Capteur</span></div>
+              </div>
+              <canvas id="gpu-chart" height="120"></canvas>
+            </article>
+          </section>
+
+          <section class="panel process-watch" aria-labelledby="process-title">
+            <div class="panel-head">
+              <div class="inline-title">
+                <span class="round-icon red">!</span>
+                <div>
+                  <span class="card-kicker">Apps qui pèsent vraiment</span>
+                  <h2 id="process-title">Process Watch</h2>
+                </div>
+              </div>
+              <div class="right-note"><strong id="process-alert">--</strong><span>moy. 5 min</span></div>
+            </div>
+            <p id="process-advice" class="process-advice">Analyse en cours...</p>
+            <div class="process-summary" role="tablist" aria-label="Classement des processus">
+              <button class="process-tab is-active" data-process-tab="cpu" type="button" role="tab" aria-selected="true">
+                <span>CPU</span><strong id="cpu-leader">--</strong>
+              </button>
+              <button class="process-tab" data-process-tab="memory" type="button" role="tab" aria-selected="false">
+                <span>RAM</span><strong id="ram-leader">--</strong>
+              </button>
+              <button class="process-tab" data-process-tab="heat" type="button" role="tab" aria-selected="false">
+                <span>Thermique</span><strong id="heat-leader">--</strong>
+              </button>
+              <button class="process-tab" data-process-tab="rosetta" type="button" role="tab" aria-selected="false">
+                <span>Rosetta</span><strong id="rosetta-leader">--</strong>
+              </button>
+            </div>
+            <div class="process-list-head">
+              <span>Top durable</span>
+              <span>Impact moyen</span>
+            </div>
+            <ol id="process-list" class="process-list compact-process-list"></ol>
+          </section>
+
+          <section class="panel llm-monitor" aria-labelledby="llm-title">
+            <div class="panel-head">
+              <div class="inline-title">
+                <span class="round-icon blue">AI</span>
+                <div>
+                  <span class="card-kicker">Claude · Codex · Gemini</span>
+                  <h2 id="llm-title">LLM Monitor</h2>
+                </div>
+              </div>
+              <div class="right-note"><strong id="llm-active-count">--</strong><span>actifs</span></div>
+            </div>
+            <p id="llm-note" class="llm-note">Détection locale des processus IA en cours...</p>
+            <div id="llm-list" class="llm-list"></div>
+          </section>
+
+          <section class="tile-grid">
+            <article class="panel compact accent-violet">
+              <div class="tile-title">
+                <span class="tile-icon">▣</span>
+                <h2>RAM</h2>
+                <strong id="ram-percent">0%</strong>
+              </div>
+              <p id="ram-used">-- / --</p>
+              <div class="bar"><span id="ram-bar"></span></div>
+              <div class="stats three">
+                <div><strong id="ram-active">--</strong><span>Active</span></div>
+                <div><strong id="ram-wired">--</strong><span>Wired</span></div>
+                <div><strong id="ram-compressed">--</strong><span>Compressée</span></div>
+              </div>
+            </article>
+
+            <article class="panel compact accent-blue">
+              <div class="tile-title">
+                <span class="tile-icon">▤</span>
+                <h2>SSD interne</h2>
+                <strong id="disk-percent">0%</strong>
+              </div>
+              <p id="disk-used">-- / --</p>
+              <div class="bar"><span id="disk-bar"></span></div>
+              <div class="stats three">
+                <div><strong id="disk-free">--</strong><span>Libre</span></div>
+                <div><strong id="disk-fs">APFS</strong><span>Format</span></div>
+                <div><strong id="disk-smart">--</strong><span>SMART</span></div>
+              </div>
+            </article>
+          </section>
+
+          <section class="lower-grid">
+            <article class="panel network">
+              <div class="panel-head">
+                <div class="inline-title">
+                  <span class="round-icon blue">◎</span>
+                  <h2>Internet</h2>
+                </div>
+                <div class="right-note"><strong id="wifi-name">--</strong><span>Wi-Fi</span></div>
+              </div>
+              <div class="net-row download">
+                <span>↓</span>
+                <div><small>Download</small><strong id="download">--</strong></div>
+                <canvas id="download-chart" height="48"></canvas>
+              </div>
+              <div class="net-row upload">
+                <span>↑</span>
+                <div><small>Upload</small><strong id="upload">--</strong></div>
+                <canvas id="upload-chart" height="48"></canvas>
+              </div>
+              <div class="stats three">
+                <div><strong id="total-rx">--</strong><span>Total reçu</span></div>
+                <div><strong id="total-tx">--</strong><span>Total envoyé</span></div>
+                <div><strong id="hostname">--</strong><span>Machine</span></div>
+              </div>
+            </article>
+
+            <article class="panel power accent-green">
+              <div class="panel-head">
+                <div class="inline-title">
+                  <span class="round-icon green">▯</span>
+                  <h2>Batterie</h2>
+                </div>
+                <div class="right-note"><strong id="power-source">--</strong><span id="battery-status">--</span></div>
+              </div>
+              <div class="battery-main">
+                <div><strong id="battery-percent">0%</strong><span>Niveau</span></div>
+                <div class="bar"><span id="battery-bar"></span></div>
+              </div>
+              <div class="stats three">
+                <div><strong id="battery-time">--</strong><span>Temps</span></div>
+                <div><strong id="battery-cycle">--</strong><span>Cycles</span></div>
+                <div><strong id="battery-health">--</strong><span>Santé</span></div>
+              </div>
+            </article>
+          </section>
+
+          <section class="lower-grid">
+            <article class="panel fanless">
+              <div class="inline-title">
+                <span class="round-icon blue">⌁</span>
+                <h2>Température système</h2>
+              </div>
+              <div class="fanless-copy">
+                <span id="thermal-mode" class="thermal-mode">Lecture capteur</span>
+                <strong id="system-temp">--</strong>
+                <span id="system-temp-note">Lecture en cours...</span>
+                <div class="thermal-meter"><span id="thermal-index-bar"></span></div>
+              </div>
+              <div class="stats three">
+                <div><strong id="thermal-summary">--</strong><span>Etat</span></div>
+                <div><strong id="thermal-source">--</strong><span>Source</span></div>
+                <div><strong id="thermal-top">--</strong><span>Top chauffe</span></div>
+              </div>
+            </article>
+
+            <article class="panel system">
+              <div class="inline-title">
+                <span class="round-icon grey">⌘</span>
+                <h2>Infos système</h2>
+              </div>
+              <dl>
+                <div><dt>Modèle</dt><dd id="model">--</dd></div>
+                <div><dt>CPU</dt><dd id="cpu-cores">--</dd></div>
+                <div><dt>Uptime</dt><dd id="uptime">--</dd></div>
+                <div><dt>Actualisé</dt><dd id="updated">--</dd></div>
+              </dl>
+            </article>
+          </section>
+
+          <section class="panel smart">
+            <div class="inline-title">
+              <span class="round-icon green">✓</span>
+              <h2>État général</h2>
+            </div>
+            <div class="smart-grid">
+              <div><span>✓</span><strong id="overall-health">Bon</strong><small>État général</small></div>
+              <div><span>✓</span><strong id="storage-health">--</strong><small>Stockage</small></div>
+              <div><span>✓</span><strong id="battery-health-2">--</strong><small>Batterie</small></div>
+              <div><span>✓</span><strong id="pressure-health">--</strong><small>Mémoire</small></div>
+              <div><span>✓</span><strong id="thermal-health">--</strong><small>Thermique</small></div>
+            </div>
+          </section>
+        </div>
+
+        <footer class="statusbar">
+          <div><span class="dot"></span><strong id="footer-health">Système sain</strong><small id="footer-note">Tout est normal</small></div>
+          <div><strong id="footer-uptime">--</strong><small>Uptime total</small></div>
+          <div><strong id="footer-read">--</strong><small>Données reçues</small></div>
+          <div><strong id="footer-written">--</strong><small>Données envoyées</small></div>
+          <div class="activity"><span></span><i></i><i></i><i></i><i></i><i></i></div>
+        </footer>
+      </section>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>

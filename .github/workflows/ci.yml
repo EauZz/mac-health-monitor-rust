@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  macos:
+    name: macOS checks
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust format
+        run: cargo fmt --check
+
+      - name: Rust check
+        run: cargo check --locked
+
+      - name: Rust tests
+        run: cargo test --locked
+
+      - name: JavaScript syntax
+        run: node --check public/app.js
+
+      - name: Build app bundle
+        run: ./build-app.sh
